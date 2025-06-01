@@ -2,7 +2,7 @@ name: Deploy Spring Boot App
 
 on:
   push:
-    branches: [ "dev/Test" ]  # or [dev, Test] if you want both branches
+    branches: [ "master" ]  # or [dev, Test] if you want both branches
 
 jobs:
   deploy:

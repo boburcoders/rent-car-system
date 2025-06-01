@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: RentCar-Management-System
+  profiles:
+    active: dev
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rent_car_db
+    username: postgres
+    password: 3884
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+

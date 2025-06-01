@@ -20,17 +20,17 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
-            cd ~/rent-car-system || mkdir ~/rent-car-system && cd ~/rent-car-system
+            cd ~/rent-car-system/RentaCar-Management-System || mkdir ~/rent-car-system/RentaCar-Management-System && cd ~/rent-car-system/RentaCar-Management-System
             rm -rf ./*
           EOF
 
-          rsync -avz --exclude 'target/' ./ ${{ secrets.USER }}@${{ secrets.HOST }}:~/rent-car-system/
+          rsync -avz --exclude 'target/' ./ ${{ secrets.USER }}@${{ secrets.HOST }}:~/rent-car-system/RentaCar-Management-System/
 
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
-            cd ~/rent-car-system
-            docker build -t rentCar-system-image .
-            docker stop rentCar-system-container || true
-            docker rm rentCar-system-container || true
-            docker run -d --name rentCar-system-container --restart=always -p 8080:8080 rentCar-system-image
-            sudo systemctl restart rentCar-system
+            cd ~/rent-car-system/RentaCar-Management-System
+            docker build --no-cache -t rent-system-image .
+            docker stop rent-system-container || true
+            docker rm rent-system-container || true
+            docker run -d --name rent-system-container --restart=always -p 8080:8080 rent-system-image
+            sudo systemctl restart rent-system
           EOF

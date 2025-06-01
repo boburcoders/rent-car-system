@@ -34,3 +34,4 @@ jobs:
             docker run -d --name rent-system-container --restart=always -p 8080:8080 rent-system-image
             sudo systemctl restart rent-system
           EOF
+

@@ -20,17 +20,17 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
-            cd ~/post-of-sale || mkdir ~/post-of-sale && cd ~/post-of-sale
+            cd ~/rent-car-system || mkdir ~/rent-car-system && cd ~/rent-car-system
             rm -rf ./*
           EOF
 
-          rsync -avz --exclude 'target/' ./ ${{ secrets.USER }}@${{ secrets.HOST }}:~/post-of-sale/
+          rsync -avz --exclude 'target/' ./ ${{ secrets.USER }}@${{ secrets.HOST }}:~/rent-car-system/
 
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
-            cd ~/post-of-sale
-            docker build -t pos-system-image .
-            docker stop pos-system-container || true
-            docker rm pos-system-container || true
-            docker run -d --name pos-system-container --restart=always -p 8080:8080 pos-system-image
-            sudo systemctl restart pos-system
+            cd ~/rent-car-system
+            docker build -t rentCar-system-image .
+            docker stop rentCar-system-container || true
+            docker rm rentCar-system-container || true
+            docker run -d --name rentCar-system-container --restart=always -p 8080:8080 rentCar-system-image
+            sudo systemctl restart rentCar-system
           EOF

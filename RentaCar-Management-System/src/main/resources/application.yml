@@ -2,7 +2,7 @@ spring:
   application:
     name: RentCar-Management-System
   profiles:
-    active: dev
+    active: prod
 ---
 spring:
   config:

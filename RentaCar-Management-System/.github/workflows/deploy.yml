@@ -1,0 +1,37 @@
+name: Deploy Spring Boot App
+
+on:
+  push:
+    branches: [ "master" ]  # or [dev, Test] if you want both branches
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+            cd ~/rent-car-system || mkdir ~/rent-car-system && cd ~/rent-car-system
+            rm -rf ./*
+          EOF
+
+          rsync -avz --exclude 'target/' ./ ${{ secrets.USER }}@${{ secrets.HOST }}:~/rent-car-system/
+
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+            cd ~/rent-car-system/
+            docker build --no-cache -t rent-system-image .
+            docker stop rent-system-container || true
+            docker rm rent-system-container || true
+            docker run -d --name rent-system-container --restart=always -p 8080:8080 rent-system-image
+            sudo systemctl restart rent-system
+          EOF
+
